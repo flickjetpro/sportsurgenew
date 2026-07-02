@@ -63,7 +63,7 @@ function renderCategory(cat) {
   const tbody = document.getElementById('cat-tbody');
   const loading = document.getElementById('loading-cat');
   const title = document.getElementById('cat-title');
-  title.innerHTML = `${getCategoryEmoji(cat)} ${getCategoryLabel(cat)} <span>Streams</span>`;
+  title.innerHTML = `Sportsurge ${getCategoryLabel(cat)} <span>Streams</span>`;
 
   Promise.all([
     getMatchesBySport(cat).catch(() => []),
