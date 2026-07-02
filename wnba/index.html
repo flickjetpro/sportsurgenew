@@ -106,7 +106,8 @@
     .match-row{cursor:pointer;transition:background .15s}
     .match-row:hover{background:rgba(255,255,255,.04)}
     .match-row td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
-    .skel td{padding:10px 12px;height:42px;border-bottom:1px solid rgba(255,255,255,.04)}
+    .skel td{padding:10px 12px;height:42px;background:linear-gradient(90deg,var(--card) 25%,rgba(255,255,255,.04) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     .team-cell{display:flex;align-items:center;gap:8px}
     .team-cell img{width:22px;height:22px;border-radius:50%;flex-shrink:0;object-fit:contain}
     .team-cell .name{font-size:.85rem;font-weight:600}
@@ -197,16 +198,16 @@
               <th></th>
             </tr>
           </thead>
-          <tbody id="cat-tbody">            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>
-            <tr class="skel"><td colspan="4">&nbsp;</td></tr>          </tbody>
+          <tbody id="cat-tbody">            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>
+            <tr class="skel"><td></td><td></td><td></td><td></td></tr>          </tbody>
         </table>
     </div>
   </div>
