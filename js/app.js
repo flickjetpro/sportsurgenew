@@ -111,7 +111,7 @@ function buildMatchRow(m, showCatOnHome) {
     <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(' vs ')[0]}</span></div></td>
     <td class="status-cell">${statusHtml}${catHtml}</td>
     <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(' vs ')[1] || ''}</span></div></td>
-    <td class="nav-icon">→</td>
+    <td class="nav-icon">›</td>
   </tr>`;
 }
 
