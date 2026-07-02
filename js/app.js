@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderHomepage() {
   const tbody = document.getElementById('match-tbody');
-  const loading = document.getElementById('loading-matches');
 
   Promise.all([
     getPopularLiveMatches().catch(() => []),
@@ -52,16 +51,14 @@ function renderHomepage() {
     (live || []).forEach(addMatch);
     (today || []).forEach(addMatch);
 
-    if (rows.length === 0) { loading.textContent = 'No matches available right now. Check back later!'; return; }
-    loading.style.display = 'none';
+    if (rows.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">No matches available right now. Check back later!</td></tr>'; return; }
     tbody.innerHTML = rows.map(m => buildMatchRow(m, true, false)).join('');
     attachRowListeners(tbody);
-  }).catch(err => { loading.textContent = 'Failed to load matches. Please refresh.'; console.error(err); });
+  }).catch(err => { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">Failed to load matches. Please refresh.</td></tr>'; console.error(err); });
 }
 
 function renderCategory(cat) {
   const tbody = document.getElementById('cat-tbody');
-  const loading = document.getElementById('loading-cat');
   const title = document.getElementById('cat-title');
   title.innerHTML = `Sportsurge ${getCategoryLabel(cat)} Streams`;
 
@@ -88,11 +85,10 @@ function renderCategory(cat) {
       return a.date - b.date;
     });
 
-    if (combined.length === 0) { loading.textContent = 'No matches available for this category.'; return; }
-    loading.style.display = 'none';
+    if (combined.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">No matches available for this category.</td></tr>'; return; }
     tbody.innerHTML = combined.map(m => buildMatchRow(m, false, true)).join('');
     attachRowListeners(tbody);
-  }).catch(err => { loading.textContent = 'Failed to load matches.'; console.error(err); });
+  }).catch(err => { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">Failed to load matches.</td></tr>'; console.error(err); });
 }
 
 function buildMatchRow(m, showCatOnHome, showFullDate) {
