@@ -22,7 +22,7 @@ function classifyMatch(match) {
 
   if (cat === 'american-football') {
     const isCFL = CFL_TEAMS.some(t => combined.includes(t));
-    if (isCFL) return 'cfb';
+    if (isCFL) return cat;
     return 'nfl';
   }
 
@@ -56,8 +56,11 @@ function getCategoryLabel(cat) {
   const labels = {
     nfl: 'NFL', nba: 'NBA', mlb: 'MLB', ufc: 'UFC',
     boxing: 'Boxing', wwe: 'WWE', f1: 'F1', wnba: 'WNBA',
-    soccer: 'Soccer', cfb: 'CFB', fight: 'Fight',
-    motorsports: 'Motorsports'
+    soccer: 'Soccer', fight: 'Fight', motorsports: 'Motorsports',
+    'american-football': 'American Football',
+    hockey: 'Hockey', tennis: 'Tennis', rugby: 'Rugby',
+    golf: 'Golf', cricket: 'Cricket', afl: 'AFL',
+    billiards: 'Billiards', darts: 'Darts', other: 'Other'
   };
   return labels[cat] || cat;
 }
@@ -66,8 +69,12 @@ function getCategoryEmoji(cat) {
   const emojis = {
     nfl: '\u{1F3C8}', nba: '\u{1F3C0}', mlb: '\u{26BE}', ufc: '\u{1F94A}',
     boxing: '\u{1F94A}', wwe: '\u{1F93C}', f1: '\u{1F3CE}\uFE0F',
-    wnba: '\u{1F3C0}', soccer: '\u{26BD}', cfb: '\u{1F3C8}',
-    fight: '\u{1F94A}', motorsports: '\u{1F3CE}\uFE0F'
+    wnba: '\u{1F3C0}', soccer: '\u{26BD}',
+    fight: '\u{1F94A}', motorsports: '\u{1F3CE}\uFE0F',
+    'american-football': '\u{1F3C8}', hockey: '\u{1F3D2}\uFE0F',
+    tennis: '\u{1F3BE}', rugby: '\u{1F3C9}', golf: '\u{26F3}\uFE0F',
+    cricket: '\u{1F3CF}', afl: '\u{1F3C8}', billiards: '\u{1F3B1}',
+    darts: '\u{1F3AF}'
   };
   return emojis[cat] || '\u{1F4FA}';
 }

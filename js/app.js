@@ -113,9 +113,9 @@ function buildMatchRow(m, showCatOnHome, showFullDate) {
   const catHtml = showCatOnHome ? `<div class="cat-tag">${catLabel}</div>` : '';
 
   return `<tr class="match-row" data-id="${m.id}">
-    <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(' vs ')[0]}</span></div></td>
+    <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(/\s+vs\.?\s*/i)[0]}</span></div></td>
     <td class="status-cell">${statusHtml}${catHtml}</td>
-    <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(' vs ')[1] || ''}</span></div></td>
+    <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(/\s+vs\.?\s*/i)[1] || ''}</span></div></td>
     <td class="nav-icon">›</td>
   </tr>`;
 }
