@@ -13,6 +13,11 @@ const FIGHT_KEYWORDS = {
 
 const F1_KEYWORDS = ['grand prix', 'practice', 'qualifying', 'sprint', 'formula 1', 'race'];
 
+const WNBA_TEAMS = [
+  'mystics', 'dream', 'sun', 'wings', 'mercury', 'storm',
+  'lynx', 'liberty', 'aces', 'sky', 'fever', 'sparks', 'valkyries', 'tempo'
+];
+
 function classifyMatch(match) {
   const title = (match.title || '').toLowerCase();
   const homeName = ((match.teams && match.teams.home && match.teams.home.name) || '').toLowerCase();
@@ -27,7 +32,8 @@ function classifyMatch(match) {
   }
 
   if (cat === 'basketball') {
-    if (title.includes(' w ') || homeName.endsWith(' w') || awayName.endsWith(' w')) {
+    if (title.includes(' w ') || homeName.endsWith(' w') || awayName.endsWith(' w') ||
+        WNBA_TEAMS.some(t => homeName.endsWith(t) || awayName.endsWith(t))) {
       return 'wnba';
     }
     return 'nba';
