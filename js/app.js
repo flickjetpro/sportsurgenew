@@ -2,8 +2,10 @@ function getCurrentRoute() {
   let path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/match' || path.startsWith('/match/')) return { type: 'match', id: new URLSearchParams(window.location.search).get('id') };
   const cats = ['nfl','nba','mlb','ufc','boxing','wwe','f1','wnba','soccer'];
-  const match = cats.find(c => path === '/' + c);
-  if (match) return { type: 'category', category: match };
+  const clean = cats.find(c => path === '/' + c);
+  if (clean) return { type: 'category', category: clean };
+  const filePath = cats.find(c => path.includes('/' + c + '/') || path.includes('\\' + c + '\\'));
+  if (filePath) return { type: 'category', category: filePath };
   return { type: 'home' };
 }
 
