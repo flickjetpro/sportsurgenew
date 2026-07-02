@@ -51,15 +51,11 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#0f1117;--surface:#171a23;--card:#1e2230;--border:#2a2e3d;--primary:#22c55e;--accent:#ef4444;--gold:#f7c948;--text:#e8eaed;--muted:#8b8fa3;--radius:8px}
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;min-height:100vh}
+    html{overflow-y:scroll;scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
     a{color:var(--primary);text-decoration:none}
     a:hover{text-decoration:underline}
     img{max-width:100%;display:block}
