@@ -23,7 +23,33 @@
   <meta name="twitter:description" content="Watch free UFC streams on Sportsurge. Live fights, no sign-up.">
   <meta name="twitter:image" content="https://sportsurge.shop/og-image.webp">
 
-  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://sportsurge.shop/#website",
+        "name": "Sportsurge",
+        "alternateName": ["Sportsurge Live", "Sportsurge Sports Streaming"],
+        "url": "https://sportsurge.shop/",
+        "description": "Sportsurge - Watch free live sports streams for NFL, NBA, MLB, UFC, Boxing, WWE, F1 and more. No sign-up needed.",
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://sportsurge.shop/#faq",
+        "mainEntity": [
+          {"@type":"Question","name":"What is Sportsurge?","acceptedAnswer":{"@type":"Answer","text":"Sportsurge is a free live sports streaming platform that aggregates publicly available sports streams. We provide links to live NFL, NBA, MLB, UFC, Boxing, WWE, F1, WNBA, Soccer, and more."}},
+          {"@type":"Question","name":"Is Sportsurge free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Sportsurge is 100% free. No subscription, no registration, no hidden fees."}},
+          {"@type":"Question","name":"Which sports are available on Sportsurge?","acceptedAnswer":{"@type":"Answer","text":"We cover NFL, NBA, MLB, UFC, Boxing, WWE, Formula 1, WNBA, NCAA, Soccer (Premier League, Champions League, La Liga), and many more."}},
+          {"@type":"Question","name":"Do I need an account?","acceptedAnswer":{"@type":"Answer","text":"No. Just visit the site and start watching. No account or payment needed."}},
+          {"@type":"Question","name":"Is Sportsurge mobile-friendly?","acceptedAnswer":{"@type":"Answer","text":"Yes. Sportsurge works on all devices including phones, tablets, laptops, and desktops."}}
+        ]
+      }
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -160,53 +186,11 @@
       </div>
     </div>
   </nav>
+  <div id="page-home" class="page-section"></div>
 
-  <div id="page-home" class="page-section active">
-    
-
-    
-    </div>
-
-    <div class="container section" id="matches-section">
-      <h2 class="section-title">Today's Matches</h2>
-        <table class="match-table" id="match-table">
-          <thead>
-            <tr>
-              <th>Home Team</th>
-              <th>Status</th>
-              <th>Away Team</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="match-tbody"></tbody>
-        </table>
-      <div id="loading-matches" style="text-align:center;padding:40px;color:var(--muted)">Loading matches...</div>
-    </div>
-
-  
-      </details>
-      <details>
-        <summary>Is Sportsurge free?</summary>
-        <div class="faq-body">Yes. Sportsurge is 100% free. No subscription, no registration, no hidden fees.</div>
-      </details>
-      <details>
-        <summary>Which sports are available?</summary>
-        <div class="faq-body">We cover NFL, NBA, MLB, UFC, Boxing, WWE, Formula 1, WNBA, NCAA, Soccer (Premier League, Champions League, La Liga, etc.), and many more.</div>
-      </details>
-      <details>
-        <summary>Do I need an account?</summary>
-        <div class="faq-body">No. Just visit the site and start watching. No account or payment needed.</div>
-      </details>
-      <details>
-        <summary>Is it mobile-friendly?</summary>
-        <div class="faq-body">Yes. Sportsurge works on all devices â€” phones, tablets, laptops, and desktops.</div>
-      </details>
-    </div>
-  </div>
-
-  <div id="page-category" class="page-section">
+  <div id="page-category" class="page-section active">
     <div class="container section">
-      <a class="back-link" href="/">â† Back to Home</a>
+      <a class="back-link" href="/">← Back to Home</a>
       <h1 class="section-title" id="cat-title">🥊 UFC <span>Streams</span></h1>
         <table class="match-table" id="cat-table">
           <thead>
@@ -225,14 +209,13 @@
 
   <div id="page-match" class="page-section">
     <div class="container section">
-      <a class="back-link" href="/">â† Back</a>
+      <a class="back-link" href="/">← Back</a>
       <div id="match-detail-content">
         <div style="text-align:center;padding:40px;color:var(--muted)">Loading match details...</div>
       </div>
     </div>
   </div>
-
-  <footer>
+<footer>
     <div class="container">
       <div class="footer-inner">
         <div class="footer-col">
