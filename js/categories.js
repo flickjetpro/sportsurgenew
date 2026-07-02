@@ -32,8 +32,7 @@ function classifyMatch(match) {
   }
 
   if (cat === 'basketball') {
-    if (title.includes(' w ') || homeName.endsWith(' w') || awayName.endsWith(' w') ||
-        WNBA_TEAMS.some(t => homeName.endsWith(t) || awayName.endsWith(t))) {
+    if (title.includes(' w ') || homeName.endsWith(' w') || awayName.endsWith(' w')) {
       return 'wnba';
     }
     return 'nba';

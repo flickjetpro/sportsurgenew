@@ -39,17 +39,11 @@ function renderHomepage() {
     getTodayMatches().catch(() => [])
   ]).then(([popular, live, today]) => {
     const seen = new Set();
-    const nameSeen = new Set();
     const rows = [];
 
     function addMatch(m) {
       if (m.date === 0 || !m.sources || m.sources.length === 0 || seen.has(m.id)) return;
       seen.add(m.id);
-      const home = (m.teams?.home?.name || '').replace(/\s+w$/i, '').toLowerCase();
-      const away = (m.teams?.away?.name || '').replace(/\s+w$/i, '').toLowerCase();
-      const key = home + '|' + away;
-      if (home && away && nameSeen.has(key)) return;
-      nameSeen.add(key);
       rows.push(m);
     }
 
