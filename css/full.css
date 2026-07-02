@@ -1,0 +1,28 @@
+/* Full stylesheet loaded async — additional styles beyond critical CSS */
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* Match row transitions */
+.match-row{will-change:background}
+
+/* Source card improvements */
+.sources-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+
+/* Responsive table */
+@media(max-width:600px){
+  .team-cell .name{font-size:.8rem}
+  .match-table td,.match-table th{padding:8px 6px}
+  .team-cell img{width:18px;height:18px}
+}
+
+/* Loading skeleton */
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:calc(200px + 100%) 0}}
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--surface) 50%,var(--card) 75%);background-size:200px 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:20px;margin:4px 0}
+
+/* Fade in animation for page sections */
+.page-section{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
