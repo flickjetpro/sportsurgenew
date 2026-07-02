@@ -3,6 +3,7 @@ let allMatchesCache = [];
 
 async function initSearch() {
   const input = document.getElementById('search-input');
+  if (!input) return;
   const dropdown = document.getElementById('search-dropdown');
 
   input.addEventListener('focus', () => {

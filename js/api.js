@@ -81,6 +81,12 @@ function formatDateET(timestamp) {
   });
 }
 
+function formatDateOnlyET(timestamp) {
+  return new Date(timestamp).toLocaleString('en-US', {
+    timeZone: 'America/New_York', month: 'long', day: 'numeric'
+  });
+}
+
 function isLive(timestamp) {
   return timestamp < Date.now();
 }

@@ -52,7 +52,7 @@ function renderHomepage() {
 
     if (rows.length === 0) { loading.textContent = 'No matches available right now. Check back later!'; return; }
     loading.style.display = 'none';
-    tbody.innerHTML = rows.map(m => buildMatchRow(m, true)).join('');
+    tbody.innerHTML = rows.map(m => buildMatchRow(m, true, false)).join('');
     attachRowListeners(tbody);
   }).catch(err => { loading.textContent = 'Failed to load matches. Please refresh.'; console.error(err); });
 }
@@ -88,12 +88,12 @@ function renderCategory(cat) {
 
     if (combined.length === 0) { loading.textContent = 'No matches available for this category.'; return; }
     loading.style.display = 'none';
-    tbody.innerHTML = combined.map(m => buildMatchRow(m, false)).join('');
+    tbody.innerHTML = combined.map(m => buildMatchRow(m, false, true)).join('');
     attachRowListeners(tbody);
   }).catch(err => { loading.textContent = 'Failed to load matches.'; console.error(err); });
 }
 
-function buildMatchRow(m, showCatOnHome) {
+function buildMatchRow(m, showCatOnHome, showFullDate) {
   const cls = classifyMatch(m);
   const catLabel = getCategoryLabel(cls);
   const home = m.teams && m.teams.home || {};
@@ -104,7 +104,14 @@ function buildMatchRow(m, showCatOnHome) {
   const awayName = away.name || '';
 
   const live = isLive(m.date);
-  const statusHtml = live ? `<div class="status-live">🔴 LIVE</div>` : `<div class="status-time">${formatTimeET(m.date)}</div>`;
+  let statusHtml;
+  if (live) {
+    statusHtml = `<div class="status-live">🔴 LIVE</div>`;
+  } else if (showFullDate && !isToday(m.date)) {
+    statusHtml = `<div class="status-time">${formatDateOnlyET(m.date)}<br><span class="status-sub">${formatTimeET(m.date)}</span></div>`;
+  } else {
+    statusHtml = `<div class="status-time">${formatTimeET(m.date)}</div>`;
+  }
   const catHtml = showCatOnHome ? `<div class="cat-tag">${catLabel}</div>` : '';
 
   return `<tr class="match-row" data-id="${m.id}">
