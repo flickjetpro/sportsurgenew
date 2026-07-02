@@ -75,7 +75,7 @@ function performSearch(query, dropdown) {
 
   dropdown.querySelectorAll('.search-item').forEach(el => {
     el.addEventListener('click', () => {
-      navigate('#/match/' + el.dataset.id);
+      window.location.href = '/match/?id=' + el.dataset.id;
       dropdown.classList.remove('open');
       document.getElementById('search-input').value = '';
     });
