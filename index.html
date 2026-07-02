@@ -57,7 +57,7 @@
 
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0b0f1a;--surface:#131b2f;--card:#1a2340;--border:#233150;--primary:#00d4ff;--accent:#ff3b5c;--gold:#f7c948;--green:#22c55e;--text:#e2e8f0;--muted:#8899bb;--radius:8px}
+    :root{--bg:#0b1410;--surface:#12241a;--card:#183322;--border:#1e4a2d;--primary:#22c55e;--accent:#ef4444;--gold:#f7c948;--text:#e2e8f0;--muted:#8899bb;--radius:8px}
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;min-height:100vh}
     a{color:var(--primary);text-decoration:none}
@@ -66,23 +66,26 @@
     .container{max-width:1080px;margin:0 auto;padding:0 16px}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-    nav{background:rgba(11,15,26,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    nav{background:rgba(11,20,16,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
     .nav-inner{display:flex;align-items:center;height:56px;gap:8px}
     .logo{font-size:1.3rem;font-weight:900;letter-spacing:-.5px;color:var(--text);white-space:nowrap}
     .logo span{color:var(--primary)}
+    .nav-toggle{display:none}
+    .nav-hamburger{display:none;font-size:1.5rem;color:var(--text);cursor:pointer;padding:4px 8px;user-select:none}
     .nav-scroll{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;padding:0 8px}
     .nav-scroll::-webkit-scrollbar{display:none}
     .nav-link{color:var(--muted);font-size:.8rem;font-weight:600;padding:6px 10px;border-radius:6px;white-space:nowrap;transition:color .15s,background .15s}
     .nav-link:hover{color:var(--text);background:rgba(255,255,255,.06);text-decoration:none}
-    .nav-link.active{color:var(--primary);background:rgba(0,212,255,.1)}
+    .nav-link.active{color:var(--primary);background:rgba(34,197,94,.1)}
+    @media(max-width:767px){.nav-hamburger{display:block}.nav-scroll{display:none;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;gap:0}.nav-link{padding:10px 8px;border-bottom:1px solid var(--border);border-radius:0}.nav-link:last-child{border-bottom:none}#nav-toggle:checked~.nav-scroll{display:flex}}
 
-    .hero{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(255,59,92,.06));padding:56px 0 48px;text-align:center}
+    .hero{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.04));padding:56px 0 48px;text-align:center}
     .hero h1{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:900;line-height:1.2;margin-bottom:12px;letter-spacing:-1px}
     .hero h1 em{font-style:normal;color:var(--primary)}
     .hero p{max-width:600px;margin:0 auto 24px;font-size:.95rem;color:var(--muted)}
-    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;margin-bottom:16px}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;margin-bottom:16px}
 
-    .search-wrap{max-width:640px;margin:0 auto 32px;position:relative}
+    .search-wrap{max-width:640px;margin:20px auto 32px;position:relative}
     .search-input{width:100%;padding:12px 16px 12px 42px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.95rem;outline:none;transition:border-color .2s}
     .search-input:focus{border-color:var(--primary)}
     .search-input::placeholder{color:var(--muted)}
@@ -95,7 +98,7 @@
     .search-item-teams{flex:1;font-size:.85rem}
     .search-item-teams strong{font-weight:600;color:var(--text)}
     .search-item-meta{font-size:.75rem;color:var(--muted);text-align:right;white-space:nowrap}
-    .search-item .cat-tag{font-size:.7rem;padding:2px 8px;border-radius:10px;background:rgba(0,212,255,.1);color:var(--primary)}
+    .search-item .cat-tag{font-size:.7rem;padding:2px 8px;border-radius:10px;background:rgba(34,197,94,.1);color:var(--primary)}
 
     .section{padding:32px 0}
     .section-title{font-size:1.2rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px}
@@ -113,16 +116,10 @@
     .status-cell{text-align:center}
     .status-live{color:var(--accent);font-weight:800;font-size:.85rem}
     .status-time{color:var(--text);font-size:.85rem;font-weight:600}
-    .cat-tag{display:inline-block;font-size:.7rem;padding:2px 10px;border-radius:10px;background:rgba(0,212,255,.1);color:var(--primary);font-weight:600;margin-top:3px}
-    .nav-icon{text-align:center;color:var(--muted);font-size:1rem;transition:transform .2s}
+    .cat-tag{display:inline-block;font-size:.7rem;padding:2px 10px;border-radius:10px;background:rgba(34,197,94,.1);color:var(--primary);font-weight:600;margin-top:3px}
+    .nav-icon{text-align:center;color:var(--muted);font-size:1.2rem;transition:transform .2s;line-height:1}
     .match-row:hover .nav-icon{transform:translateX(3px);color:var(--primary)}
-
-    .leagues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-    .league-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:border-color .2s,transform .2s}
-    .league-card:hover{border-color:var(--primary);transform:translateY(-2px)}
-    .league-card .emoji{font-size:1.6rem;margin-bottom:6px}
-    .league-card .lname{font-size:.85rem;font-weight:700}
-    .league-card .lcount{font-size:.72rem;color:var(--muted);margin-top:2px}
+    @media(max-width:599px){.match-table th{padding:6px 4px;font-size:.68rem}.match-row td{padding:6px 4px}.team-cell img{width:18px;height:18px}.team-cell .name{font-size:.78rem}.status-live,.status-time{font-size:.75rem}.match-table th:last-child,.match-row td:last-child{width:20px;min-width:20px}.match-table th:first-child,.match-row td:first-child{max-width:35vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.match-table th:nth-child(3),.match-row td:nth-child(3){max-width:35vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 
     details{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
     details[open]{border-color:var(--primary)}
@@ -173,6 +170,8 @@
   <nav>
     <div class="container nav-inner">
       <a href="/" class="logo">Sports<span>urge</span></a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-hamburger">☰</label>
       <div class="nav-scroll" id="nav-links">
         <a href="/nfl/" class="nav-link" data-cat="nfl">NFL</a>
         <a href="/nba/" class="nav-link" data-cat="nba">NBA</a>
@@ -206,7 +205,6 @@
 
     <div class="container section" id="matches-section">
       <h2 class="section-title">Today's Matches</h2>
-      <div style="overflow-x:auto">
         <table class="match-table" id="match-table">
           <thead>
             <tr>
@@ -218,23 +216,7 @@
           </thead>
           <tbody id="match-tbody"></tbody>
         </table>
-      </div>
       <div id="loading-matches" style="text-align:center;padding:40px;color:var(--muted)">Loading matches...</div>
-    </div>
-
-    <div class="container section">
-      <h2 class="section-title">Popular Leagues</h2>
-      <div class="leagues-grid" id="leagues-grid">
-        <div class="league-card" data-cat="nfl"><div class="emoji">🏈</div><div class="lname">NFL</div></div>
-        <div class="league-card" data-cat="nba"><div class="emoji">🏀</div><div class="lname">NBA</div></div>
-        <div class="league-card" data-cat="mlb"><div class="emoji">⚾</div><div class="lname">MLB</div></div>
-        <div class="league-card" data-cat="ufc"><div class="emoji">🥊</div><div class="lname">UFC</div></div>
-        <div class="league-card" data-cat="boxing"><div class="emoji">🥊</div><div class="lname">Boxing</div></div>
-        <div class="league-card" data-cat="wwe"><div class="emoji">🤼</div><div class="lname">WWE</div></div>
-        <div class="league-card" data-cat="f1"><div class="emoji">🏎️</div><div class="lname">F1</div></div>
-        <div class="league-card" data-cat="wnba"><div class="emoji">🏀</div><div class="lname">WNBA</div></div>
-        <div class="league-card" data-cat="soccer"><div class="emoji">⚽</div><div class="lname">Soccer</div></div>
-      </div>
     </div>
 
     <div class="container section">
@@ -266,7 +248,6 @@
     <div class="container section">
       <a class="back-link" href="/">← Back to Home</a>
       <h2 class="section-title" id="cat-title">Category</h2>
-      <div style="overflow-x:auto">
         <table class="match-table" id="cat-table">
           <thead>
             <tr>
@@ -278,7 +259,6 @@
           </thead>
           <tbody id="cat-tbody"></tbody>
         </table>
-      </div>
       <div id="loading-cat" style="text-align:center;padding:40px;color:var(--muted)">Loading matches...</div>
     </div>
   </div>

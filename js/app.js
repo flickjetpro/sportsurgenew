@@ -1,86 +1,3 @@
-const API_BASE = 'https://streamed.pk/api';
-const CACHE_TTL = 60000;
-const cache = {};
-
-function getCached(key) {
-  const entry = cache[key];
-  if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data;
-  return null;
-}
-
-function setCached(key, data) {
-  cache[key] = { data, ts: Date.now() };
-}
-
-async function fetchJSON(url) {
-  const cached = getCached(url);
-  if (cached) return cached;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
-  const data = await res.json();
-  setCached(url, data);
-  return data;
-}
-
-async function getSports() { return fetchJSON(`${API_BASE}/sports`); }
-async function getLiveMatches() { return fetchJSON(`${API_BASE}/matches/live`); }
-async function getPopularLiveMatches() { return fetchJSON(`${API_BASE}/matches/live/popular`); }
-async function getTodayMatches() { return fetchJSON(`${API_BASE}/matches/all-today`); }
-async function getAllMatches() { return fetchJSON(`${API_BASE}/matches/all`); }
-async function getMatchesBySport(sport) { return fetchJSON(`${API_BASE}/matches/${sport}`); }
-async function getPopularMatchesBySport(sport) { return fetchJSON(`${API_BASE}/matches/${sport}/popular`); }
-async function getStream(source, id) { return fetchJSON(`${API_BASE}/stream/${source}/${id}`); }
-function getBadgeUrl(badge) { return `${API_BASE}/images/badge/${badge}.webp`; }
-
-function formatTimeET(timestamp) {
-  return new Date(timestamp).toLocaleString('en-US', {
-    timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true
-  });
-}
-
-function formatDateET(timestamp) {
-  return new Date(timestamp).toLocaleString('en-US', {
-    timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
-  });
-}
-
-function isLive(timestamp) { return timestamp < Date.now(); }
-function isToday(timestamp) {
-  const now = new Date();
-  const d = new Date(timestamp);
-  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
-}
-
-const CFL_TEAMS = ['stampeders','argonauts','blue bombers','tiger-cats','redblacks','roughriders','elks','bc lions','alouettes','winnipeg','hamilton','ottawa','saskatchewan','montreal','toronto','calgary','edmonton'];
-const FIGHT_KEYWORDS = {ufc:['ufc','fight night'],boxing:['boxing'],wwe:['wwe','smackdown','raw','nxt','aew','collision','wrestlemania','royal rumble','summerslam','survivor series','tna','impact']};
-const F1_KEYWORDS = ['grand prix','practice','qualifying','sprint','formula 1','race'];
-
-function classifyMatch(match) {
-  const title = (match.title || '').toLowerCase();
-  const home = (match.teams && match.teams.home && match.teams.home.name || '').toLowerCase();
-  const away = (match.teams && match.teams.away && match.teams.away.name || '').toLowerCase();
-  const combined = title + ' ' + home + ' ' + away;
-  const cat = (match.category || '').toLowerCase();
-
-  if (cat === 'american-football') return CFL_TEAMS.some(t => combined.includes(t)) ? 'cfb' : 'nfl';
-  if (cat === 'basketball') return (title.includes(' w ') || home.endsWith(' w') || away.endsWith(' w')) ? 'wnba' : 'nba';
-  if (cat === 'baseball') return 'mlb';
-  if (cat === 'fight') { for (const [label, ks] of Object.entries(FIGHT_KEYWORDS)) { if (ks.some(k => combined.includes(k))) return label; } return 'fight'; }
-  if (cat === 'motor-sports') return F1_KEYWORDS.some(k => combined.includes(k)) ? 'f1' : 'motorsports';
-  if (cat === 'football') return 'soccer';
-  return cat;
-}
-
-function getCategoryLabel(cat) {
-  const labels = {nfl:'NFL',nba:'NBA',mlb:'MLB',ufc:'UFC',boxing:'Boxing',wwe:'WWE',f1:'F1',wnba:'WNBA',soccer:'Soccer',cfb:'CFB',fight:'Fight',motorsports:'Motorsports'};
-  return labels[cat] || cat;
-}
-
-function getCategoryEmoji(cat) {
-  const emojis = {nfl:'🏈',nba:'🏀',mlb:'⚾',ufc:'🥊',boxing:'🥊',wwe:'🤼',f1:'🏎️',wnba:'🏀',soccer:'⚽',cfb:'🏈',fight:'🥊',motorsports:'🏎️'};
-  return emojis[cat] || '📺';
-}
-
 function getCurrentRoute() {
   let path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/match' || path.startsWith('/match/')) return { type: 'match', id: new URLSearchParams(window.location.search).get('id') };
@@ -109,11 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initSearch();
-  document.querySelectorAll('.league-card').forEach(card => {
-    card.addEventListener('click', () => {
-      window.location.href = '/' + card.dataset.cat + '/';
-    });
-  });
 });
 
 function renderHomepage() {
@@ -142,7 +54,6 @@ function renderHomepage() {
     loading.style.display = 'none';
     tbody.innerHTML = rows.map(m => buildMatchRow(m, true)).join('');
     attachRowListeners(tbody);
-    updateLeagueCounts(rows);
   }).catch(err => { loading.textContent = 'Failed to load matches. Please refresh.'; console.error(err); });
 }
 
@@ -200,7 +111,7 @@ function buildMatchRow(m, showCatOnHome) {
     <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(' vs ')[0]}</span></div></td>
     <td class="status-cell">${statusHtml}${catHtml}</td>
     <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(' vs ')[1] || ''}</span></div></td>
-    <td class="nav-icon">▶</td>
+    <td class="nav-icon">→</td>
   </tr>`;
 }
 
@@ -209,18 +120,6 @@ function attachRowListeners(tbody) {
     row.addEventListener('click', () => {
       window.location.href = '/match/?id=' + row.dataset.id;
     });
-  });
-}
-
-function updateLeagueCounts(rows) {
-  const counts = {};
-  rows.forEach(m => { const c = classifyMatch(m); counts[c] = (counts[c] || 0) + 1; });
-  document.querySelectorAll('.league-card').forEach(card => {
-    const cat = card.dataset.cat;
-    const count = counts[cat] || 0;
-    let el = card.querySelector('.lcount');
-    if (!el) { el = document.createElement('div'); el.className = 'lcount'; card.appendChild(el); }
-    el.textContent = count > 0 ? `${count} match${count > 1 ? 'es' : ''}` : 'No matches';
   });
 }
 
