@@ -1,17 +1,3 @@
-function getBase() {
-  const s = document.querySelector('script[src*="app.js"]');
-  if (!s) return '';
-  return s.getAttribute('src').replace('js/app.js', '');
-}
-
-function fixLinks() {
-  const base = getBase();
-  document.querySelectorAll('.nav-link').forEach(a => {
-    const h = a.getAttribute('href');
-    if (h && h.startsWith('/')) a.href = base + h.substring(1);
-  });
-}
-
 function getCurrentRoute() {
   let path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path.endsWith('/match') || path.includes('/match/') || path.includes('\\match\\')) return { type: 'match', id: new URLSearchParams(window.location.search).get('id') };
@@ -24,7 +10,6 @@ function getCurrentRoute() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  fixLinks();
   const route = getCurrentRoute();
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -138,10 +123,9 @@ function buildMatchRow(m, showCatOnHome, showFullDate) {
 }
 
 function attachRowListeners(tbody) {
-  const base = getBase();
   tbody.querySelectorAll('.match-row').forEach(row => {
     row.addEventListener('click', () => {
-      window.location.href = base + 'match/index.html?id=' + row.dataset.id;
+      window.location.href = '/match/index.html?id=' + row.dataset.id;
     });
   });
 }
