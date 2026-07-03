@@ -10,9 +10,6 @@ function fixLinks() {
     const h = a.getAttribute('href');
     if (h && h.startsWith('/')) a.href = base + h.substring(1);
   });
-  document.querySelectorAll('.back-link').forEach(a => {
-    if (a.getAttribute('href') === '/') a.href = base + 'index.html';
-  });
 }
 
 function getCurrentRoute() {
@@ -59,8 +56,10 @@ function renderHomepage() {
     const seen = new Set();
     const rows = [];
 
+    const next24h = Date.now() + 86400000;
     function addMatch(m) {
       if (m.date === 0 || !m.sources || m.sources.length === 0 || seen.has(m.id)) return;
+      if (m.date > next24h) return;
       seen.add(m.id);
       rows.push(m);
     }
@@ -149,51 +148,106 @@ function attachRowListeners(tbody) {
 
 async function renderMatchDetail(id) {
   const container = document.getElementById('match-detail-content');
-  container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading match details...</div>';
 
   try {
     const all = await getAllMatches();
     const match = all.find(m => m.id === id);
-    if (!match) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Match not found.</div>'; return; }
+    if (!match) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Match not found.</div>';
+      return;
+    }
 
     const cat = classifyMatch(match);
     const catLabel = getCategoryLabel(cat);
-    const home = match.teams && match.teams.home || {};
-    const away = match.teams && match.teams.away || {};
+    const catEmoji = getCategoryEmoji(cat);
+    const home = match.teams?.home || {};
+    const away = match.teams?.away || {};
     const homeBadge = home.badge ? getBadgeUrl(home.badge) : '';
     const awayBadge = away.badge ? getBadgeUrl(away.badge) : '';
     const live = isLive(match.date);
-    const dateStr = isToday(match.date) ? 'Today' : formatDateET(match.date);
-    const timeStr = formatTimeET(match.date);
 
-    let sourcesHtml = '<div class="sources-grid">';
-    for (const s of match.sources || []) {
-      try {
-        const streams = await getStream(s.source, s.id);
-        const ps = streams[0] || {};
-        const lang = ps.language || 'Unknown';
-        const hd = ps.hd ? 'HD' : 'SD';
-        const viewers = ps.viewers !== undefined ? `${ps.viewers} watching` : '';
-        const watchUrl = `https://watch.sportsurge.shop/?source=${s.source}&id=${s.id}&stream=${ps.streamNo || 1}&matchId=${match.id}`;
-        sourcesHtml += `<div class="source-card"><div class="sname">${s.source.charAt(0).toUpperCase() + s.source.slice(1)}</div><div class="sinfo">${lang} ${hd}</div>${viewers ? `<div class="sviewers">${viewers}</div>` : ''}<a href="${watchUrl}" target="_blank" rel="noopener" class="watch-btn">▶ Watch</a></div>`;
-      } catch (e) {
-        sourcesHtml += `<div class="source-card"><div class="sname">${s.source.charAt(0).toUpperCase() + s.source.slice(1)}</div><div class="sinfo">Stream unavailable</div></div>`;
+    let statusHtml;
+    if (live) {
+      statusHtml = '<span class="live-label">🔴 LIVE</span>';
+    } else if (isToday(match.date)) {
+      statusHtml = `<span>🕐 ${formatTimeET(match.date)} ET</span>`;
+    } else {
+      statusHtml = `<span>📅 ${formatDateOnlyET(match.date)} · ${formatTimeET(match.date)} ET</span>`;
+    }
+
+    const hasTeams = home.name && away.name;
+    let heroHtml;
+    if (hasTeams) {
+      heroHtml = `
+        <div class="match-hero">
+          <div class="teams">
+            <div class="team">${homeBadge ? `<img src="${homeBadge}" alt="${home.name}">` : ''}<span class="tname">${home.name}</span></div>
+            <div class="vs">VS</div>
+            <div class="team">${awayBadge ? `<img src="${awayBadge}" alt="${away.name}">` : ''}<span class="tname">${away.name}</span></div>
+          </div>
+          <div class="meta">${statusHtml}<span>${catEmoji} ${catLabel}</span></div>
+        </div>`;
+    } else {
+      heroHtml = `
+        <div class="match-hero">
+          <div class="single-title">${match.title || 'Match'}</div>
+          <div class="meta">${statusHtml}<span>${catEmoji} ${catLabel}</span></div>
+        </div>`;
+    }
+
+    let sourcesHtml = '<h2 style="font-size:1rem;font-weight:700;margin-bottom:12px">Stream Sources</h2>';
+    if (!match.sources || match.sources.length === 0) {
+      sourcesHtml += '<div style="text-align:center;padding:24px;color:var(--muted)">No stream links available for this match.</div>';
+    } else {
+      const streamPromises = match.sources.map(async s => {
+        try {
+          const streams = await getStream(s.source, s.id);
+          return { source: s.source, id: s.id, streams };
+        } catch (e) {
+          return { source: s.source, id: s.id, streams: [] };
+        }
+      });
+      const results = await Promise.all(streamPromises);
+
+      let hasAnyStreams = false;
+      for (const result of results) {
+        if (result.streams.length === 0) continue;
+        hasAnyStreams = true;
+
+        const capName = result.source.charAt(0).toUpperCase() + result.source.slice(1);
+        const count = result.streams.length;
+
+        sourcesHtml += `<div class="source-card">
+          <div class="sc-header">
+            <span class="sc-name">${capName}</span>
+            <span class="sc-count">${count} ${count === 1 ? 'Link' : 'Links'}</span>
+          </div>
+          <table><thead><tr><th style="width:36px;text-align:center">#</th><th>Language</th><th style="width:100px">Viewers</th><th style="width:100px"></th></tr></thead><tbody>`;
+
+        for (const ps of result.streams) {
+          const lang = ps.language || 'Unknown';
+          const badgeClass = ps.hd ? 'hd-badge' : 'sd-badge';
+          const badgeText = ps.hd ? 'HD' : 'SD';
+          const viewers = ps.viewers !== undefined ? `${ps.viewers} watching` : '';
+          const watchUrl = `https://flickjetpro.github.io/sportsurgestreampage/stream/?source=${result.source}&id=${result.id}&stream=${ps.streamNo || 1}&matchId=${match.id}`;
+
+          sourcesHtml += `<tr>
+            <td class="snum">${ps.streamNo || '?'}</td>
+            <td><div class="slang"><span>${lang}</span><span class="${badgeClass}">${badgeText}</span></div></td>
+            <td class="sv">${viewers}</td>
+            <td style="text-align:right"><a href="${watchUrl}" target="_blank" rel="noopener" class="src-watch-btn">▶ Watch</a></td>
+          </tr>`;
+        }
+
+        sourcesHtml += '</tbody></table></div>';
+      }
+
+      if (!hasAnyStreams) {
+        sourcesHtml = '<h2 style="font-size:1rem;font-weight:700;margin-bottom:12px">Stream Sources</h2><div style="text-align:center;padding:24px;color:var(--muted)">No stream links available for this match.</div>';
       }
     }
-    sourcesHtml += '</div>';
 
-    container.innerHTML = `
-      <div class="match-detail-header">
-        <div class="teams">
-          <div class="team">${homeBadge ? `<img src="${homeBadge}" alt="${home.name}">` : ''}<span class="tname">${home.name}</span></div>
-          <div class="vs">VS</div>
-          <div class="team">${awayBadge ? `<img src="${awayBadge}" alt="${away.name}">` : ''}<span class="tname">${away.name}</span></div>
-        </div>
-        <div class="meta"><span>${live ? '🔴 LIVE' : '⏰ ' + dateStr}</span><span>🏆 ${catLabel}</span><span>🕒 ${timeStr} ET</span></div>
-      </div>
-      <h2 style="font-size:1rem;font-weight:700;margin-bottom:4px">Stream Sources</h2>
-      ${sourcesHtml}
-    `;
+    container.innerHTML = heroHtml + sourcesHtml;
   } catch (err) {
     container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Failed to load match details.</div>';
     console.error(err);
