@@ -272,7 +272,8 @@
     .cta-section h2{font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;margin-bottom:14px}
     .cta-section p{color:var(--muted);font-size:1rem;max-width:520px;margin:0 auto 32px}
     .cta-sports{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
-    .sport-tag{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.8rem;color:var(--muted)}
+    .sport-tag{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.8rem;color:var(--muted);transition:color .2s,background .2s}
+a.sport-tag:hover{color:var(--primary);background:rgba(34,197,94,.08);text-decoration:none}
 
     .status-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px;max-width:760px;margin:16px auto 0}
     .status-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--primary);padding:6px 16px;border-radius:20px;font-size:.82rem;font-weight:700;margin-bottom:18px}
@@ -864,14 +865,14 @@
         <p>Zero subscriptions. Zero sign-ups. Zero hassle. Just high-quality live sports exactly when you want it.</p>
         <a href="/" style="display:inline-block;background:var(--primary);color:#000;padding:15px 36px;border-radius:8px;font-weight:800;font-size:1.05rem;transition:opacity .15s;text-decoration:none">▶ Start Watching Free</a>
         <div class="cta-sports">
-          <span class="sport-tag">🏈 NFL</span>
-          <span class="sport-tag">🏀 NBA</span>
-          <span class="sport-tag">⚽ Soccer</span>
-          <span class="sport-tag">⚾ MLB</span>
-          <span class="sport-tag">🥊 UFC</span>
-          <span class="sport-tag">🏎️ F1</span>
-          <span class="sport-tag">🤼 WWE</span>
-          <span class="sport-tag">🥊 Boxing</span>
+          <a href="/nfl/" class="sport-tag">🏈 NFL</a>
+          <a href="/nba/" class="sport-tag">🏀 NBA</a>
+          <a href="/soccer/" class="sport-tag">⚽ Soccer</a>
+          <a href="/mlb/" class="sport-tag">⚾ MLB</a>
+          <a href="/ufc/" class="sport-tag">🥊 UFC</a>
+          <a href="/f1/" class="sport-tag">🏎️ F1</a>
+          <a href="/wwe/" class="sport-tag">🤼 WWE</a>
+          <a href="/boxing/" class="sport-tag">🥊 Boxing</a>
         </div>
       </div>
     </section>
