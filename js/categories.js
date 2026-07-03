@@ -11,7 +11,7 @@ const FIGHT_KEYWORDS = {
         'royal rumble', 'summerslam', 'survivor series', 'tna', 'impact']
 };
 
-const F1_KEYWORDS = ['grand prix', 'practice', 'qualifying', 'sprint', 'formula 1', 'race'];
+const F1_KEYWORDS = ['f1', 'grand prix', 'practice', 'formula 1'];
 
 const WNBA_TEAMS = [
   'mystics', 'dream', 'sun', 'wings', 'mercury', 'storm',
