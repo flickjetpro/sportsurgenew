@@ -231,7 +231,16 @@ async function renderMatchDetail(id) {
       }
     }
 
-    container.innerHTML = heroHtml + sourcesHtml;
+    const adHtml = '<div class="match-ad" id="match-ad"></div>';
+    container.innerHTML = heroHtml + adHtml + sourcesHtml;
+
+    const adDiv = document.getElementById('match-ad');
+    if (adDiv) {
+      window.atOptions = {'key':'479b61bc70c293f0965e289f991b668b','format':'iframe','height':250,'width':300,'params':{}};
+      const sc = document.createElement('script');
+      sc.src = 'https://www.highperformanceformat.com/479b61bc70c293f0965e289f991b668b/invoke.js';
+      adDiv.appendChild(sc);
+    }
   } catch (err) {
     container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Failed to load match details.</div>';
     console.error(err);
