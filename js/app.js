@@ -1,4 +1,4 @@
-(function(){var _Hasync=_Hasync||[];_Hasync.push(['Histats.start','1,5037549,4,0,0,0,00010000']);_Hasync.push(['Histats.fasi','1']);_Hasync.push(['Histats.track_hits','']);var hs=document.createElement('script');hs.type='text/javascript';hs.async=true;hs.src=('//s10.histats.com/js15_as.js');document.head.appendChild(hs);})();
+(function(){var _Hasync=_Hasync||[];_Hasync.push(['Histats.start','1,5037469,4,0,0,0,00010000']);_Hasync.push(['Histats.fasi','1']);_Hasync.push(['Histats.track_hits','']);var hs=document.createElement('script');hs.type='text/javascript';hs.async=true;hs.src=('//s10.histats.com/js15_as.js');document.head.appendChild(hs);})();
 
 function getCurrentRoute() {
   let path = window.location.pathname.replace(/\/+$/, '') || '/';
@@ -284,9 +284,9 @@ async function renderMatchDetail(id) {
 
     const adDiv = document.getElementById('match-ad');
     if (adDiv) {
-      window.atOptions = {'key':'104daeb33b2af8ea16ae67a09a511bd2','format':'iframe','height':250,'width':300,'params':{}};
+      window.atOptions = {'key':'f5b3ebd0afd4ebb276c39c1fba40970b','format':'iframe','height':90,'width':728,'params':{}};
       const sc = document.createElement('script');
-      sc.src = 'https://www.highperformanceformat.com/104daeb33b2af8ea16ae67a09a511bd2/invoke.js';
+      sc.src = 'https://www.highperformanceformat.com/f5b3ebd0afd4ebb276c39c1fba40970b/invoke.js';
       adDiv.appendChild(sc);
     }
   } catch (err) {
