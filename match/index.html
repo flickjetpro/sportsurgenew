@@ -183,9 +183,9 @@
     .skel-source .skel-stream .sv{width:60px;margin-left:auto}
     .skel-source .skel-stream .sb{width:60px}
 
-.match-ad{display:flex;justify-content:center;margin:28px 0 12px;padding:16px 0;position:relative;overflow:hidden}
+.match-ad{display:flex;flex-direction:column;align-items:center;justify-content:center;margin:28px 0 12px;padding:16px 0;position:relative;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);border-radius:var(--radius)}
 .match-ad::before{content:"Sponsor";display:block;position:absolute;top:0;font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.match-ad iframe{max-width:100%!important}
+.match-ad iframe{max-width:100%}
 
     @media(max-width:599px){
       .match-hero{padding:36px 0 28px}
