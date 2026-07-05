@@ -32,44 +32,73 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
 });
 
-function renderHomepage() {
+async function renderHomepage() {
   const tbody = document.getElementById('match-tbody');
+  const next24h = Date.now() + 86400000;
 
-  Promise.all([
-    getPopularLiveMatches().catch(() => []),
-    getLiveMatches().catch(() => []),
-    getTodayMatches().catch(() => [])
-  ]).then(([popular, live, today]) => {
+  try {
+    const [today, popularLive] = await Promise.all([
+      getTodayMatches().catch(() => []),
+      getPopularLiveMatches().catch(() => [])
+    ]);
+
     const seen = new Set();
-    const rows = [];
+    const matches = [];
 
-    const next24h = Date.now() + 86400000;
-    function addMatch(m) {
+    function add(m) {
       if (m.date === 0 || !m.sources || m.sources.length === 0 || seen.has(m.id)) return;
       if (m.date > next24h) return;
       seen.add(m.id);
-      rows.push(m);
+      matches.push(m);
     }
 
-    (popular || []).forEach(addMatch);
-    (live || []).forEach(addMatch);
-    (today || []).forEach(addMatch);
+    (today || []).forEach(add);
+    (popularLive || []).forEach(add);
 
-    if (rows.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">No matches available right now. Check back later!</td></tr>'; return; }
+    if (!matches.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px 0;color:var(--muted)">No matches available right now.</td></tr>';
+      return;
+    }
+
+    const withViewers = await Promise.all(matches.map(async m => {
+      const results = await Promise.all(
+        (m.sources || []).map(s => getStream(s.source, s.id).catch(() => []))
+      );
+      const totalViewers = results.reduce((sum, streams) =>
+        sum + streams.reduce((s, st) => s + (st.viewers || 0), 0), 0);
+      return { ...m, totalViewers };
+    }));
+
+    const live = withViewers.filter(m => isLive(m.date));
+    const upcoming = withViewers.filter(m => !isLive(m.date));
+
+    const tier1 = live.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
+
+    const popularIds = new Set((popularLive || []).map(m => m.id));
+    const tier2 = live.filter(m => m.totalViewers === 0 && popularIds.has(m.id));
+    const tier3 = live.filter(m => m.totalViewers === 0 && !popularIds.has(m.id)).sort((a, b) => a.date - b.date);
+    const tier4 = upcoming.sort((a, b) => a.date - b.date);
+
+    const rows = [...tier1, ...tier2, ...tier3, ...tier4];
     tbody.innerHTML = rows.map(m => buildMatchRow(m, true, false)).join('');
     attachRowListeners(tbody);
-  }).catch(err => { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">Failed to load matches. Please refresh.</td></tr>'; console.error(err); });
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px 0;color:var(--muted)">Failed to load matches.</td></tr>';
+    console.error(err);
+  }
 }
 
-function renderCategory(cat) {
+async function renderCategory(cat) {
   const tbody = document.getElementById('cat-tbody');
   const title = document.getElementById('cat-title');
   title.innerHTML = `Sportsurge ${getCategoryLabel(cat)} Streams`;
 
-  Promise.all([
-    getMatchesBySport(cat).catch(() => []),
-    getAllMatches().catch(() => [])
-  ]).then(([sportMatches, all]) => {
+  try {
+    const [sportMatches, all] = await Promise.all([
+      getMatchesBySport(cat).catch(() => []),
+      getAllMatches().catch(() => [])
+    ]);
+
     const filter = m => classifyMatch(m) === cat && m.date !== 0 && m.sources && m.sources.length > 0;
     const allFiltered = (all || []).filter(filter);
     const sportFiltered = (sportMatches || []).filter(filter);
@@ -82,17 +111,34 @@ function renderCategory(cat) {
       combined.push(m);
     });
 
-    combined.sort((a, b) => {
-      const aL = isLive(a.date), bL = isLive(b.date);
-      if (aL && !bL) return -1;
-      if (!aL && bL) return 1;
-      return a.date - b.date;
-    });
+    if (!combined.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">No matches available for this category.</td></tr>';
+      return;
+    }
 
-    if (combined.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">No matches available for this category.</td></tr>'; return; }
-    tbody.innerHTML = combined.map(m => buildMatchRow(m, false, true)).join('');
+    const withViewers = await Promise.all(combined.map(async m => {
+      const results = await Promise.all(
+        (m.sources || []).map(s => getStream(s.source, s.id).catch(() => []))
+      );
+      const totalViewers = results.reduce((sum, streams) =>
+        sum + streams.reduce((s, st) => s + (st.viewers || 0), 0), 0);
+      return { ...m, totalViewers };
+    }));
+
+    const live = withViewers.filter(m => isLive(m.date));
+    const upcoming = withViewers.filter(m => !isLive(m.date));
+
+    const tier1 = live.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
+    const tier2 = live.filter(m => m.totalViewers === 0).sort((a, b) => a.date - b.date);
+    const tier3 = upcoming.sort((a, b) => a.date - b.date);
+
+    const rows = [...tier1, ...tier2, ...tier3];
+    tbody.innerHTML = rows.map(m => buildMatchRow(m, false, true)).join('');
     attachRowListeners(tbody);
-  }).catch(err => { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">Failed to load matches.</td></tr>'; console.error(err); });
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px 0">Failed to load matches.</td></tr>';
+    console.error(err);
+  }
 }
 
 function buildMatchRow(m, showCatOnHome, showFullDate) {
