@@ -72,12 +72,12 @@ async function renderHomepage() {
     const live = withViewers.filter(m => isLive(m.date));
     const upcoming = withViewers.filter(m => !isLive(m.date));
 
-    const tier1 = live.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
+    const tier1 = withViewers.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
 
     const popularIds = new Set((popularLive || []).map(m => m.id));
     const tier2 = live.filter(m => m.totalViewers === 0 && popularIds.has(m.id));
     const tier3 = live.filter(m => m.totalViewers === 0 && !popularIds.has(m.id)).sort((a, b) => a.date - b.date);
-    const tier4 = upcoming.sort((a, b) => a.date - b.date);
+    const tier4 = upcoming.filter(m => m.totalViewers === 0).sort((a, b) => a.date - b.date);
 
     const rows = [...tier1, ...tier2, ...tier3, ...tier4];
     tbody.innerHTML = rows.map(m => buildMatchRow(m, true, false)).join('');
@@ -128,9 +128,9 @@ async function renderCategory(cat) {
     const live = withViewers.filter(m => isLive(m.date));
     const upcoming = withViewers.filter(m => !isLive(m.date));
 
-    const tier1 = live.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
+    const tier1 = withViewers.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
     const tier2 = live.filter(m => m.totalViewers === 0).sort((a, b) => a.date - b.date);
-    const tier3 = upcoming.sort((a, b) => a.date - b.date);
+    const tier3 = upcoming.filter(m => m.totalViewers === 0).sort((a, b) => a.date - b.date);
 
     const rows = [...tier1, ...tier2, ...tier3];
     tbody.innerHTML = rows.map(m => buildMatchRow(m, false, true)).join('');
