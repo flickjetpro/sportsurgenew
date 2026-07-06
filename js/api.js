@@ -16,7 +16,8 @@ function setCached(key, data) {
 async function fetchJSON(url) {
   const cached = getCached(url);
   if (cached) return cached;
-  const res = await fetch(url);
+  const busted = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
+  const res = await fetch(busted, { cache: 'no-store' });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
   const data = await res.json();
   setCached(url, data);
