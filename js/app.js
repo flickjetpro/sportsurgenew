@@ -75,7 +75,7 @@ async function renderHomepage() {
     const tier1 = withViewers.filter(m => m.totalViewers > 0).sort((a, b) => b.totalViewers - a.totalViewers);
 
     const popularIds = new Set((popularLive || []).map(m => m.id));
-    const tier2 = live.filter(m => m.totalViewers === 0 && popularIds.has(m.id));
+    const tier2 = live.filter(m => m.totalViewers === 0 && popularIds.has(m.id)).sort((a, b) => a.date - b.date);
     const tier3 = live.filter(m => m.totalViewers === 0 && !popularIds.has(m.id)).sort((a, b) => a.date - b.date);
     const tier4 = upcoming.filter(m => m.totalViewers === 0).sort((a, b) => a.date - b.date);
 
