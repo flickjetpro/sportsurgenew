@@ -172,9 +172,9 @@ function buildMatchRow(m, showCatOnHome, showFullDate) {
   const catHtml = showCatOnHome ? `<div class="cat-tag">${catLabel}</div>` : '';
 
   return `<tr class="match-row" data-id="${m.id}">
-    <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="${homeName || m.title.split(/\s+vs\.?\s*/i)[0]}" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(/\s+vs\.?\s*/i)[0]}</span></div></td>
+    <td><div class="team-cell">${homeBadge ? `<img src="${homeBadge}" alt="" onerror="this.remove()" loading="lazy">` : ''}<span class="name">${homeName || m.title.split(/\s+vs\.?\s*/i)[0]}</span></div></td>
     <td class="status-cell">${statusHtml}${catHtml}</td>
-    <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="${awayName || m.title.split(/\s+vs\.?\s*/i)[1] || ''}" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(/\s+vs\.?\s*/i)[1] || ''}</span></div></td>
+    <td><div class="team-cell">${awayBadge ? `<img src="${awayBadge}" alt="" onerror="this.remove()" loading="lazy">` : ''}<span class="name">${awayName || m.title.split(/\s+vs\.?\s*/i)[1] || ''}</span></div></td>
     <td class="nav-icon">›</td>
   </tr>`;
 }
@@ -222,9 +222,9 @@ async function renderMatchDetail(id) {
       heroHtml = `
         <div class="match-hero">
           <div class="teams">
-            <div class="team">${homeBadge ? `<img src="${homeBadge}" alt="${home.name}">` : ''}<span class="tname">${home.name}</span></div>
+            <div class="team">${homeBadge ? `<img src="${homeBadge}" alt="" onerror="this.remove()">` : ''}<span class="tname">${home.name}</span></div>
             <div class="vs">VS</div>
-            <div class="team">${awayBadge ? `<img src="${awayBadge}" alt="${away.name}">` : ''}<span class="tname">${away.name}</span></div>
+            <div class="team">${awayBadge ? `<img src="${awayBadge}" alt="" onerror="this.remove()">` : ''}<span class="tname">${away.name}</span></div>
           </div>
           <div class="meta">${statusHtml}<span>${catEmoji} ${catLabel}</span></div>
         </div>`;
