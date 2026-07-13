@@ -293,9 +293,9 @@ async function renderMatchDetail(id) {
 
     const adDiv = document.getElementById('match-ad');
     if (adDiv) {
-      window.atOptions = {'key':'f5b3ebd0afd4ebb276c39c1fba40970b','format':'iframe','height':90,'width':728,'params':{}};
+      window.atOptions = {'key':'830c68be19e0474db8f4407fedd22f4e','format':'iframe','height':90,'width':728,'params':{}};
       const sc = document.createElement('script');
-      sc.src = 'https://www.highperformanceformat.com/f5b3ebd0afd4ebb276c39c1fba40970b/invoke.js';
+      sc.src = 'https://www.highperformanceformat.com/830c68be19e0474db8f4407fedd22f4e/invoke.js';
       adDiv.appendChild(sc);
     }
   } catch (err) {
