@@ -296,7 +296,7 @@ async function renderMatchDetail(id) {
       window.atOptions = {'key':'830c68be19e0474db8f4407fedd22f4e','format':'iframe','height':90,'width':728,'params':{}};
       const sc = document.createElement('script');
       sc.src = 'https://www.highperformanceformat.com/830c68be19e0474db8f4407fedd22f4e/invoke.js';
-      adDiv.appendChild(sc);
+      document.head.appendChild(sc);
     }
   } catch (err) {
     container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Failed to load match details.</div>';
