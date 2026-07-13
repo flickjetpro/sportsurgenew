@@ -3,7 +3,7 @@ var _Hasync=_Hasync||[];_Hasync.push(['Histats.start','1,5037469,4,0,0,0,0001000
 function getCurrentRoute() {
   let path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path.endsWith('/match') || path.includes('/match/') || path.includes('\\match\\')) return { type: 'match', id: new URLSearchParams(window.location.search).get('id') };
-  const cats = ['nfl','nba','mlb','ufc','boxing','wwe','f1','wnba','soccer'];
+  const cats = ['nfl','nba','mlb','nhl','ufc','boxing','wwe','f1','wnba','soccer'];
   const clean = cats.find(c => path === '/' + c || path.endsWith('/' + c));
   if (clean) return { type: 'category', category: clean };
   const filePath = cats.find(c => path.includes('/' + c + '/') || path.includes('\\' + c + '\\'));

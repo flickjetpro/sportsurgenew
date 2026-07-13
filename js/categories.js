@@ -54,12 +54,14 @@ function classifyMatch(match) {
 
   if (cat === 'football') return 'soccer';
 
+  if (cat === 'hockey') return 'nhl';
+
   return cat;
 }
 
 function getCategoryLabel(cat) {
   const labels = {
-    nfl: 'NFL', nba: 'NBA', mlb: 'MLB', ufc: 'UFC',
+    nfl: 'NFL', nba: 'NBA', mlb: 'MLB', nhl: 'NHL', ufc: 'UFC',
     boxing: 'Boxing', wwe: 'WWE', f1: 'F1', wnba: 'WNBA',
     soccer: 'Soccer', fight: 'Fight', motorsports: 'Motorsports',
     'american-football': 'American Football',
@@ -72,7 +74,7 @@ function getCategoryLabel(cat) {
 
 function getCategoryEmoji(cat) {
   const emojis = {
-    nfl: '\u{1F3C8}', nba: '\u{1F3C0}', mlb: '\u{26BE}', ufc: '\u{1F94A}',
+    nfl: '\u{1F3C8}', nba: '\u{1F3C0}', mlb: '\u{26BE}', nhl: '\u{1F3D2}\uFE0F', ufc: '\u{1F94A}',
     boxing: '\u{1F94A}', wwe: '\u{1F93C}', f1: '\u{1F3CE}\uFE0F',
     wnba: '\u{1F3C0}', soccer: '\u{26BD}',
     fight: '\u{1F94A}', motorsports: '\u{1F3CE}\uFE0F',
